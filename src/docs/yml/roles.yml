@@ -1,0 +1,128 @@
+tags:
+  - name: Roles
+    description: API for managing roles
+
+paths:
+  /roles:
+    post:
+      summary: Create a new role
+      operationId: createRole
+      tags:
+        - Roles
+      description: Creates a new role
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/CreateRoleRequest'
+      responses:
+        '201':
+          description: Successful role creation
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    get:
+      summary: List all roles
+      operationId: listRoles
+      tags:
+        - Roles
+      description: Retrieves a list of all roles
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageLimit'
+        - $ref: '#/components/parameters/IsDownload'
+      responses:
+        '200':
+          description: List of roles
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /roles/{roleId}:
+    put:
+      summary: Update role by ID
+      operationId: updateRole
+      tags:
+        - Roles
+      description: Updates an existing role by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RoleId'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateRoleRequest'
+      responses:
+        '200':
+          description: Successful role update
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    get:
+      summary: Retrieve role by ID
+      operationId: getRole
+      tags:
+        - Roles
+      description: Retrieves a role by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RoleId'
+      responses:
+        '200':
+          description: Successful role retrieval
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  requestBodies:
+    CreateRoleRequest:
+      description: Request to create a role
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateRoleRequestSchema'
+
+    UpdateRoleRequest:
+      description: Request to update a role
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RoleRequestSchema'
+
+  schemas:
+    RoleRequestSchema:
+      type: object
+      properties:
+        title:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+      example:
+        title: Administrator
+        type: admin
+        description: Administrator
+
+    CreateRoleRequestSchema:
+      allOf:
+        - $ref: '#/components/schemas/RoleRequestSchema'
+        - type: object
+          required:
+            - title
+            - type
+            - description
+
+    UpdateRoleRequestSchema:
+      $ref: '#/components/schemas/RoleRequestSchema'
+
+  parameters:
+    RoleId:
+      name: roleId
+      in: path
+      description: ID of the role
+      required: true
+      schema:
+        type: string

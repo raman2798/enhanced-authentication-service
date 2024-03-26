@@ -1,0 +1,111 @@
+tags:
+  - name: File Uploads
+    description: API for managing uploads
+
+paths:
+  /uploads:
+    post:
+      summary: Create a new upload
+      operationId: createUpload
+      tags:
+        - File Uploads
+      description: Uploads a file
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/CreateUploadRequest'
+      responses:
+        '201':
+          description: Successful upload creation
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    get:
+      summary: List all uploads
+      operationId: listUploads
+      tags:
+        - File Uploads
+      description: Retrieves a list of all uploads
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageLimit'
+        - $ref: '#/components/parameters/IsDownload'
+      responses:
+        '200':
+          description: List of uploads
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /uploads/{uploadId}:
+    delete:
+      summary: Delete upload by ID
+      operationId: deleteUpload
+      tags:
+        - File Uploads
+      description: Deletes an existing upload by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UploadId'
+      responses:
+        '200':
+          description: Successful upload deletion
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    get:
+      summary: Retrieve upload by ID
+      operationId: getUpload
+      tags:
+        - File Uploads
+      description: Retrieves an upload by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UploadId'
+      responses:
+        '200':
+          description: Successful upload retrieval
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  requestBodies:
+    CreateUploadRequest:
+      description: Request to create an upload
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/UploadRequestSchema'
+
+  schemas:
+    UploadRequestSchema:
+      type: object
+      required:
+        - title
+        - file
+        - ProjectId
+      properties:
+        title:
+          type: string
+        file:
+          type: string
+          format: binary
+        ProjectId:
+          type: string
+      example:
+        title: Example Title
+        file: Example File
+        ProjectId: Example ProjectId
+
+  parameters:
+    UploadId:
+      name: uploadId
+      in: path
+      description: ID of the upload
+      required: true
+      schema:
+        type: string

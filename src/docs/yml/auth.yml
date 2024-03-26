@@ -1,0 +1,44 @@
+tags:
+  - name: Authentication
+    description: API for user authentication
+
+paths:
+  /auth/login:
+    post:
+      summary: Authenticate user
+      operationId: loginUser
+      tags:
+        - Authentication
+      description: Authenticate a user using email and password
+      requestBody:
+        $ref: '#/components/requestBodies/LoginRequest'
+      responses:
+        '200':
+          description: Successful authentication
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  requestBodies:
+    LoginRequest:
+      description: User login credentials
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LoginRequestSchema'
+
+  schemas:
+    LoginRequestSchema:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: user@example.com
+        password: secret123
